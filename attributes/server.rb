@@ -20,7 +20,7 @@
 default['mysql']['bind_address']               = attribute?('cloud') ? cloud['local_ipv4'] : ipaddress
 
 case node["platform"]
-when "centos", "redhat", "fedora", "suse", "scientific", "amazon"
+when "centos", "redhat", "oracle", "fedora", "suse", "scientific", "amazon"
   default['mysql']['package_name']            = "mysql-server"
   default['mysql']['service_name']            = "mysqld"
   default['mysql']['basedir']                 = "/usr"

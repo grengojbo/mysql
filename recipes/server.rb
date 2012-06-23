@@ -114,7 +114,7 @@ unless platform?(%w{mac_os_x})
   skip_federated = case node['platform']
                    when 'fedora', 'ubuntu', 'amazon'
                      true
-                   when 'centos', 'redhat', 'scientific'
+                   when 'centos', 'redhat', 'oracle', 'scientific'
                      node['platform_version'].to_f < 6.0
                    else
                      false

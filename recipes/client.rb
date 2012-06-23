@@ -22,7 +22,7 @@
 ::Chef::Recipe.send(:include, Opscode::Mysql::Helpers)
 
 mysql_packages = case node['platform']
-when "centos", "redhat", "suse", "fedora", "scientific", "amazon"
+when "centos", "redhat", "oracle", "suse", "fedora", "scientific", "amazon"
   %w{mysql mysql-devel}
 when "ubuntu","debian"
   if debian_before_squeeze? || ubuntu_before_lucid?
@@ -62,7 +62,7 @@ mysql_packages.each do |mysql_pack|
   end
 end
 
-if platform?(%w{ redhat centos fedora suse scientific amazon })
+if platform?(%w{ redhat centos oracle fedora suse scientific amazon })
   package 'ruby-mysql'
 elsif platform?(%w{ debian ubuntu })
   package "libmysql-ruby"
