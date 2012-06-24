@@ -78,9 +78,14 @@ if platform? 'windows'
   end
 end
 
-#package node['mysql']['package_name'] do
-#  action :install
-#end
+if node["mysql"]["type"] == "mysql"
+  package node['mysql']['package_name'] do
+    action :install
+  end
+end
+if node["mysql"]["type"] == "percona"
+  include_recipe "percona-install::server"
+end
 
 unless platform?(%w{mac_os_x})
 
