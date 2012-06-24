@@ -16,5 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+if node["mysql"]["type"] == "mysql"
 include_recipe "mysql::client"
+end
