@@ -44,13 +44,15 @@ nice            = 0
 #
 
 user            = mysql
-pid-file        = <%= node['mysql']['pid_file'] %>
+##pid-file        = <%= node['mysql']['pid_file'] %>
 socket          = <%= node['mysql']['socket'] %>
 port            = 3306
 basedir         = <%= node['mysql']['basedir'] %>
 datadir         = <%= node['mysql']['data_dir'] %>
 tmpdir          = /tmp
 skip-external-locking
+#skip-networking
+skip-name-resolve
 #
 # Instead of skip-networking the default is now to listen only on
 # localhost which is more compatible and is not less secure.
@@ -107,7 +109,7 @@ log-queries-not-using-indexes
 # The following can be used as easy to replay backup logs or for replication.
 # note: if you are setting up a replication slave, see README.Debian about
 #       other settings you may need to change.
-#server-id              = 1
+#server-id              = <%= node['mysql']['server-id'] %>
 <%- if node['mysql']['tunable']['log_bin'] %>
 log_bin = <%= node['mysql']['tunable']['log_bin'] %>
 log_slave_updates       = <%= node['mysql']['tunable']['log_slave_updates'] %>
@@ -117,8 +119,18 @@ log_bin_trust_function_creators
 <%- end %>
 expire_logs_days        = <%= node['mysql']['tunable']['expire_logs_days'] %>
 max_binlog_size         = <%= node['mysql']['tunable']['max_binlog_size'] %>
-#binlog_do_db           = include_database_name
-#binlog_ignore_db       = include_database_name
+<%- if node['mysql']['tunable']['binlog_format'] %>
+binlog_format = <%= node['mysql']['tunable']['binlog_format'] %>
+<%- end %>
+<%- if node['mysql']['tunable']['binlog_do_db'] %>
+binlog_do_db = <%= node['mysql']['tunable']['binlog_do_db'] %>
+<%- end %>
+<%- if node['mysql']['tunable']['binlog_ignore_db'] %>
+binlog_ignore_db = <%= node['mysql']['tunable']['binlog_ignore_db'] %>
+<%- end %>
+<%- if node['mysql']['tunable']['sql_mode'] %>
+sql_mode = <%= node['mysql']['tunable']['sql_mode'] %>
+<%- end %>
 <%- if node['mysql']['tunable']['relay_log'] %>
 relay-log               = <%= node['mysql']['tunable']['relay_log'] %>
 <%- end %>
@@ -133,16 +145,22 @@ skip_slave_start
 # InnoDB is enabled by default with a 10MB datafile in /var/lib/mysql/.
 # Read the manual for more InnoDB related options. There are many!
 # You might want to disable InnoDB to shrink the mysqld process by circa 100MB.
-#skip-innodb
+<%- if node['mysql']['innodb'] %>
+default_storage_engine  = InnoDB
 innodb_buffer_pool_size = <%= node['mysql']['tunable']['innodb_buffer_pool_size'] %>
 innodb_log_file_size    = <%= node['mysql']['tunable']['innodb_log_file_size'] %>
 innodb_additional_mem_pool_size = <%= node['mysql']['tunable']['innodb_additional_mem_pool_size'] %>
 innodb_data_file_path   = <%= node['mysql']['tunable']['innodb_data_file_path'] %>
 innodb_file_per_table
 innodb_flush_log_at_trx_commit = <%= node['mysql']['tunable']['innodb_flush_log_at_trx_commit'] %>
+<%- if node['mysql']['tunable']['innodb_flush_method'] %>
 innodb_flush_method     = <%= node['mysql']['tunable']['innodb_flush_method'] %>
+<%- end %>
 innodb_log_buffer_size  = <%= node['mysql']['tunable']['innodb_log_buffer_size'] %>
 innodb_adaptive_flushing  = <%= node['mysql']['tunable']['innodb_adaptive_flushing'] %>
+<% else -%>
+skip-innodb
+<%- end %>
 
 <% if @skip_federated %>
 #
@@ -171,7 +189,10 @@ quote-names
 max_allowed_packet      = <%= node['mysql']['tunable']['max_allowed_packet'] %>
 
 [mysql]
-#no-auto-rehash # faster start of mysql but no tab completition
+no-auto-rehash # faster start of mysql but no tab completition
+# Remove the next comment character if you are not familiar with SQL
+#safe-updates
+default-character-set = utf8
 
 [isamchk]
 key_buffer              = <%= node['mysql']['tunable']['max_allowed_packet'] %>
@@ -188,7 +209,7 @@ key_buffer              = <%= node['mysql']['tunable']['max_allowed_packet'] %>
 # ndb-connectstring=127.0.0.1
 
 <% case node['platform'] -%>
-<% when "centos", "redhat", "fedora", "suse", "scientific", "amazon"-%>
+<% when "centos", "redhat", "oracle", "fedora", "suse", "scientific", "amazon"-%>
 #
 # * BerkeleyDB
 #
@@ -205,3 +226,6 @@ old_passwords           = <%= node['mysql']['old_passwords'] %>
 #
 !includedir <%= node['mysql']['confd_dir'] %>/
 <% end -%>
+
+[mysqlhotcopy]
+interactive-timeout
