@@ -17,5 +17,7 @@
 # limitations under the License.
 #
 if node["mysql"]["type"] == "mysql"
-include_recipe "mysql::client"
+  include_recipe "mysql::client"
+else
+  Chef::Log.info("MySQL type is not  mysql")
 end

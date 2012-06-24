@@ -19,7 +19,11 @@
 
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 
-include_recipe "mysql::client"
+if node["mysql"]["type"] == "mysql"
+  include_recipe "mysql::client"
+else
+  Chef::Log.info("MySQL type is not  mysql")
+end
 
 # generate all passwords
 node.set_unless['mysql']['server_debian_password'] = secure_password
