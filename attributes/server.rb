@@ -18,6 +18,7 @@
 #
 
 default['mysql']['bind_address']               = attribute?('cloud') ? cloud['local_ipv4'] : ipaddress
+default['mysql']['type']                       = "mysql"
 
 case node["platform"]
 when "centos", "redhat", "oracle", "fedora", "suse", "scientific", "amazon"
@@ -99,7 +100,8 @@ end
 
 default['mysql']['use_upstart'] = platform?("ubuntu") && node.platform_version.to_f >= 10.04
 
-default['mysql']['auto-increment-increment']        = 1
+default['mysql']['server-id']        = 1
+default['mysql']['auto-increment-offset']           = 1
 default['mysql']['auto-increment-offset']           = 1
 
 default['mysql']['allow_remote_root']               = false
@@ -130,13 +132,15 @@ default['mysql']['tunable']['log_error']                       = nil
 default['mysql']['tunable']['log_queries_not_using_index']     = true
 default['mysql']['tunable']['log_bin_trust_function_creators'] = false
 
+default['mysql']['innodb']         = true
 default['mysql']['tunable']['innodb_buffer_pool_size']         = "128M"
 default['mysql']['tunable']['innodb_log_file_size']            = "5M"
 default['mysql']['tunable']['innodb_buffer_pool_size']         = "128M"
 default['mysql']['tunable']['innodb_additional_mem_pool_size'] = "8M"
 default['mysql']['tunable']['innodb_data_file_path']           = "ibdata1:10M:autoextend"
 default['mysql']['tunable']['innodb_flush_log_at_trx_commit']  = "1"
-default['mysql']['tunable']['innodb_flush_method']             = "fdatasync"
+default['mysql']['tunable']['innodb_flush_method']             = nil
+#default['mysql']['tunable']['innodb_flush_method']             = "fdatasync"
 default['mysql']['tunable']['innodb_log_buffer_size']          = "8M"
 default['mysql']['tunable']['innodb_adaptive_flushing']        = "true"
 
@@ -148,3 +152,10 @@ default['mysql']['tunable']['long_query_time']      = 2
 
 default['mysql']['tunable']['expire_logs_days']     = 10
 default['mysql']['tunable']['max_binlog_size']      = "100M"
+
+default['mysql']['tunable']['sql_mode']      = nil
+#default['mysql']['tunable']['sql_mode']      = "NO_ENGINE_SUBSTITUTION,TRADITIONAL"
+
+default['mysql']['tunable']['binlog_format']      = nil
+#default['mysql']['tunable']['binlog_format']      = nil
+default['mysql']['tunable']['binlog_do_db']      = nil

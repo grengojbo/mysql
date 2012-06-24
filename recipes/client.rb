@@ -56,11 +56,11 @@ else
   %w{mysql-client libmysqlclient-dev}
 end
 
-mysql_packages.each do |mysql_pack|
-  package mysql_pack do
-    action :install
-  end
-end
+#mysql_packages.each do |mysql_pack|
+#  package mysql_pack do
+#    action :install
+#  end
+#end
 
 if platform?(%w{ redhat centos oracle fedora suse scientific amazon })
   package 'ruby-mysql'

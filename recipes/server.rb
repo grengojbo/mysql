@@ -74,9 +74,9 @@ if platform? 'windows'
   end
 end
 
-package node['mysql']['package_name'] do
-  action :install
-end
+#package node['mysql']['package_name'] do
+#  action :install
+#end
 
 unless platform?(%w{mac_os_x})
 
