@@ -106,7 +106,7 @@ default['mysql']['auto-increment-offset']           = 1
 
 default['mysql']['allow_remote_root']               = false
 default['mysql']['tunable']['back_log']             = "128"
-default['mysql']['tunable']['key_buffer']           = "256M"
+default['mysql']['tunable']['key_buffer']           = "16M"
 default['mysql']['tunable']['max_allowed_packet']   = "16M"
 default['mysql']['tunable']['max_connections']      = "800"
 default['mysql']['tunable']['max_heap_table_size']  = "32M"
