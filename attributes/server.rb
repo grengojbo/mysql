@@ -100,10 +100,6 @@ end
 
 default['mysql']['use_upstart'] = platform?("ubuntu") && node.platform_version.to_f >= 10.04
 
-default['mysql']['server-id']        = 1
-default['mysql']['auto-increment-offset']           = 1
-default['mysql']['auto-increment-offset']           = 1
-
 default['mysql']['allow_remote_root']               = false
 default['mysql']['tunable']['back_log']             = "128"
 default['mysql']['tunable']['key_buffer']           = "16M"
@@ -121,10 +117,10 @@ default['mysql']['tunable']['thread_concurrency']   = 10
 default['mysql']['tunable']['thread_stack']         = "256K"
 default['mysql']['tunable']['wait_timeout']         = "180"
 
-default['mysql']['tunable']['log_bin']                         = nil
+default['mysql']['tunable']['log_bin']                         = "bin-log"
 default['mysql']['tunable']['log_bin_trust_function_creators'] = false
 default['mysql']['tunable']['relay_log']                       =  nil
-default['mysql']['tunable']['log_slave_updates']               = false
+default['mysql']['tunable']['log_slave_updates']               = 1
 default['mysql']['tunable']['sync_binlog']                     = 0
 default['mysql']['tunable']['skip_slave_start']                = false
 
@@ -133,16 +129,18 @@ default['mysql']['tunable']['log_queries_not_using_index']     = true
 default['mysql']['tunable']['log_bin_trust_function_creators'] = false
 
 default['mysql']['innodb']         = true
+# Set 60%-80% mem size
 default['mysql']['tunable']['innodb_buffer_pool_size']         = "128M"
-default['mysql']['tunable']['innodb_log_file_size']            = "5M"
-default['mysql']['tunable']['innodb_buffer_pool_size']         = "128M"
+# set innodb_buffer_pool_size/2  max 2G
+default['mysql']['tunable']['innodb_log_file_size']            = "64M"
 default['mysql']['tunable']['innodb_additional_mem_pool_size'] = "8M"
 default['mysql']['tunable']['innodb_data_file_path']           = "ibdata1:10M:autoextend"
 default['mysql']['tunable']['innodb_flush_log_at_trx_commit']  = "1"
 default['mysql']['tunable']['innodb_flush_method']             = nil
-#default['mysql']['tunable']['innodb_flush_method']             = "fdatasync"
+#default['mysql']['tunable']['innodb_flush_method']             = "O_DIRECT"
 default['mysql']['tunable']['innodb_log_buffer_size']          = "8M"
 default['mysql']['tunable']['innodb_adaptive_flushing']        = "true"
+#default['mysql']['tunable']['innodb_thread_concurrency']        = "10"
 
 default['mysql']['tunable']['query_cache_limit']    = "1M"
 default['mysql']['tunable']['query_cache_size']     = "16M"
@@ -156,6 +154,12 @@ default['mysql']['tunable']['max_binlog_size']      = "100M"
 default['mysql']['tunable']['sql_mode']      = nil
 #default['mysql']['tunable']['sql_mode']      = "NO_ENGINE_SUBSTITUTION,TRADITIONAL"
 
-default['mysql']['tunable']['binlog_format']      = nil
+default['mysql']['tunable']['binlog_format']      = "ROW"
 #default['mysql']['tunable']['binlog_format']      = nil
 default['mysql']['tunable']['binlog_do_db']      = nil
+
+# false/galera
+default['mysql']['cluster']         = false
+default['mysql']['server-id']        = 1
+default['mysql']['auto-increment-increment']           = 1
+default['mysql']['auto-increment-offset']           = 1
