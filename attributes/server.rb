@@ -19,6 +19,7 @@
 
 default['mysql']['bind_address']               = attribute?('cloud') ? cloud['local_ipv4'] : ipaddress
 default['mysql']['type']                       = "mysql"
+default['mysql']['apps']                       = nil
 
 case node["platform"]
 when "centos", "redhat", "oracle", "fedora", "suse", "scientific", "amazon"
