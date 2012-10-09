@@ -26,26 +26,25 @@ mysql_connection_info = {:host => "localhost", :username => 'root', :password =>
 
 Chef::Log.info("--------- MySQL User ---------")
 node[:mysql][:apps].each do |app|
-
   Chef::Log.info("MySQL database from #{app}")
   search(:apps, "id:#{app} AND status:enable") do |a|
-    a[:databases].each do |n,db|
+    a[:databases].each do |n, db|
       Chef::Log.info(">>>>>> database: #{db[:database]}")
 
-    mysql_database db[:database] do
-      connection mysql_connection_info
-      action :create
-    end
-  
-    mysql_database_user "#{db[:username]}" do
-      connection mysql_connection_info
-      password db[:password]
-      database_name db[:database]
-      host '%'
-      #privileges [:select,:update,:insert]
-      privileges [:all]
-      action :grant
-    end
+      mysql_database db[:database] do
+        connection mysql_connection_info
+        action :create
+      end
+
+      mysql_database_user "#{db[:username]}" do
+        connection mysql_connection_info
+        password db[:password]
+        database_name db[:database]
+        host '%'
+        #privileges [:select,:update,:insert]
+        privileges [:all]
+        action :grant
+      end
     end
   end
 end
